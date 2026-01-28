@@ -1,4 +1,4 @@
-import{ useState } from "react"
+import { useState } from "react"
 import { useNavigate } from "react-router"
 
 export default function Login() {
@@ -23,7 +23,7 @@ export default function Login() {
                     password
                 })
             })
-
+            //
             const data = await res.json()
 
             if (!res.ok) {
