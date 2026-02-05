@@ -25,7 +25,6 @@ export default function Register() {
                     password
                 })
             })
-
             const data = await res.json()
 
             if (!res.ok) {
@@ -33,7 +32,9 @@ export default function Register() {
                 return
             }
 
-            navigate("/login")
+            localStorage.setItem("token", data.jwt)
+
+            navigate("/home")
 
         } catch (err) {
             setError("Impossible de contacter le serveur")
