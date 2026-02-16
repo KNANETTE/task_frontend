@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { useNavigate } from "react-router"
+import { login } from "../services/authServices"
 
 export default function Login() {
     const [identifier, setIdentifier] = useState("")
@@ -7,22 +8,12 @@ export default function Login() {
     const [error, setError] = useState(null)
 
     const navigate = useNavigate()
-
     const handleSubmit = async (e) => {
         e.preventDefault()
         setError(null)
 
         try {
-            const res = await fetch("http://localhost:1337/api/auth/local", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    identifier,
-                    password
-                })
-            })
+            const res = await login(identifier, password)
             const data = await res.json()
 
             if (!res.ok) {
@@ -31,8 +22,7 @@ export default function Login() {
             }
 
             localStorage.setItem("token", data.jwt)
-
-            navigate("/home")
+            navigate("/")
         } catch (err) {
             setError("Impossible de contacter le serveur")
         }

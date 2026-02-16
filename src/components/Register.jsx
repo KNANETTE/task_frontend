@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { useNavigate } from "react-router"
+import { register } from "../services/authServices"
 
 export default function Register() {
     const [username, setUsername] = useState("")
@@ -14,17 +15,7 @@ export default function Register() {
         setError(null)
 
         try {
-            const res = await fetch("http://localhost:1337/api/auth/local/register", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    username,
-                    email,
-                    password
-                })
-            })
+            const res = await register(username, email, password)
             const data = await res.json()
 
             if (!res.ok) {
@@ -33,9 +24,7 @@ export default function Register() {
             }
 
             localStorage.setItem("token", data.jwt)
-
-            navigate("/home")
-
+            navigate("/")
         } catch (err) {
             setError("Impossible de contacter le serveur")
         }

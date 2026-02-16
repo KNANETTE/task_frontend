@@ -1,13 +1,16 @@
-import { Routes, Route } from "react-router"
+import { Route, Routes } from "react-router"
+import AuthGate from "./components/AuthGate"
 import Auth from "./pages/Auth"
-import Home from "./pages/Home"
+import Dashboard from "./pages/Dashboard"
 
 function App() {
   return (
-    <Routes>
-      <Route index element={<Auth />} />
-      <Route path="/home" element={<Auth />} />
-    </Routes>
+    <AuthGate>
+      <Routes>
+        <Route index element={<Dashboard />} />
+        <Route path="/auth" element={<Auth />} />
+      </Routes>
+    </AuthGate>
   )
 }
 

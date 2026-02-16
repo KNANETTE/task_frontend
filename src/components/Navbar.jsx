@@ -5,9 +5,10 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import InputBase from '@mui/material/InputBase';
-// import SearchIcon from '@mui/icons-material/Search';
+import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import SideDrawer from './Sidedrawer';
+import BoardModal from './BoardModal';
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -50,22 +51,28 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function Navbar() {
-    const [anchorEl, setAnchorEl] = React.useState(null);
-    const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
     return (
         <Box sx={{ flexGrow: 1 }} position="fixed" top="0" left="0" right="0">
             <AppBar position="static">
                 <Toolbar>
-                    <SideDrawer />
-                    <Search>
-                        {/* <SearchIconWrapper>
-                            <SearchIcon />
-                        </SearchIconWrapper> */}
-                        <StyledInputBase placeholder="Search…" inputProps={{ 'aria-label': 'search' }} />
-                    </Search>
+                    <Box sx={{ display: "flex" }}>
+                        <SideDrawer />
+                    </Box>
                     <Box sx={{ flexGrow: 1 }} />
-                    <Box sx={{ display: { xs: 'flex', md: 'flex' } }}>
+                    <Box sx={{ display: "flex" }}>
+                        <Search id='search-bar'>
+                            <SearchIconWrapper>
+                                <SearchIcon />
+                            </SearchIconWrapper>
+                            <StyledInputBase placeholder="Search…" inputProps={{ 'aria-label': 'search' }} />
+                        </Search>
+                    </Box>
+                    <Box sx={{ display: 'flex' }}>
+                        <BoardModal />
+                    </Box>
+                    <Box sx={{ flexGrow: 1 }} />
+                    <Box sx={{ display: 'flex' }}>
                         <IconButton size="large" edge="end" aria-label="account of current user" aria-haspopup="true" color="inherit">
                             <AccountCircle />
                         </IconButton>
