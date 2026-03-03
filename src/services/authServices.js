@@ -25,7 +25,6 @@ export async function login(identifier, password) {
             password
         })
     })
-
     return response
 }
 
