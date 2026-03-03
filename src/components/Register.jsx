@@ -24,6 +24,9 @@ export default function Register() {
             }
 
             localStorage.setItem("token", data.jwt)
+            localStorage.setItem("userid", data.user.id)
+            localStorage.setItem("useremail", data.user.email)
+            localStorage.setItem("username", data.user.username)
             navigate("/")
         } catch (err) {
             setError("Impossible de contacter le serveur")
@@ -35,7 +38,7 @@ export default function Register() {
             <div className="auth-card">
 
                 <div className="auth-icon">👤</div>
-                <h2 className="auth-title">Create Account</h2>
+                <h2 className="auth-title">Inscription</h2>
 
                 <form onSubmit={handleSubmit}>
 
@@ -45,7 +48,7 @@ export default function Register() {
                             <span className="input-icon">👤</span>
                             <input
                                 type="text"
-                                placeholder="Enter your username"
+                                placeholder="ex. nanette"
                                 value={username}
                                 onChange={(e) => setUsername(e.target.value)}
                             />
@@ -58,7 +61,7 @@ export default function Register() {
                             <span className="input-icon">📧</span>
                             <input
                                 type="email"
-                                placeholder="Enter your email"
+                                placeholder="ex. test@us.com"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                             />
@@ -66,12 +69,11 @@ export default function Register() {
                     </div>
 
                     <div className="input-group">
-                        <label>Password</label>
+                        <label>Mot de passe</label>
                         <div className="input-box">
                             <span className="input-icon">🔒</span>
                             <input
                                 type="password"
-                                placeholder="Enter your password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                             />
@@ -79,7 +81,7 @@ export default function Register() {
                     </div>
 
                     <button type="submit" className="btn btn-primary">
-                        Register
+                        Créer
                     </button>
 
                 </form>

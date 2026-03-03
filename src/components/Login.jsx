@@ -22,6 +22,9 @@ export default function Login() {
             }
 
             localStorage.setItem("token", data.jwt)
+            localStorage.setItem("userid", data.user.id)
+            localStorage.setItem("useremail", data.user.email)
+            localStorage.setItem("username", data.user.username)
             navigate("/")
         } catch (err) {
             setError("Impossible de contacter le serveur")
