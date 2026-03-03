@@ -1,3 +1,4 @@
+import CircularProgress from '@mui/material/CircularProgress';
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { isLogged } from "../services/authServices";
@@ -28,7 +29,5 @@ export default function AuthGate({ children }) {
         checkAuth();
     }, []);
 
-    if (loading)
-        return <div>Loading...</div>;
-    return children;
+    return loading ? <CircularProgress /> : children
 }
