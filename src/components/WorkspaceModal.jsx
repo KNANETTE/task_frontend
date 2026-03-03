@@ -6,8 +6,8 @@ import Modal from '@mui/material/Modal';
 import AddIcon from '@mui/icons-material/Add';
 import TextField from '@mui/material/TextField';
 import FormGroup from '@mui/material/FormGroup';
-import { createBoard } from '../services/boardServices';
-import { useNavigate, useParams } from 'react-router';
+import { createWorkspace } from '../services/workspaceServices';
+import { useNavigate } from 'react-router';
 
 const style = {
     position: 'absolute',
@@ -21,13 +21,13 @@ const style = {
     p: 4,
 };
 
-export default function BoardModal() {
+export default function WorkspaceModal() {
     const [open, setOpen] = useState(false);
     const [error, setError] = useState(null)
     const [title, setTitle] = useState("")
     const [background, setBackground] = useState("#777777")
     const token = localStorage.getItem("token")
-    const { workspace } = useParams()
+    const user = localStorage.getItem("userid")
     const navigate = useNavigate()
 
     const handleOpen = () => setOpen(!open);
@@ -37,23 +37,25 @@ export default function BoardModal() {
         setError(null)
 
         try {
-            const boardData = JSON.stringify({
+            const workspaceData = JSON.stringify({
                 data: {
                     title: title,
                     background: background,
-                    workspace: workspace
+                    // user: user
                 }
             })
-            const res = await createBoard(token, boardData)
+            const res = await createWorkspace(token, workspaceData)
             if (!res.ok) {
                 setError("something went wrong")
+                console.error(res)
                 return
             }
             const data = await res.json()
-            navigate(`/boards/${data.data.documentId}`)
+            navigate(`/workspaces/${data.data.documentId}`)
 
         } catch (error) {
             setError("something went wrong")
+            console.error(error)
         }
     }
 
@@ -61,13 +63,13 @@ export default function BoardModal() {
         <>
             <Button variant="contained" color='warning' startIcon={<AddIcon />} onClick={handleOpen}>
                 <Typography noWrap component="div" sx={{ display: { xs: 'none', sm: 'block' } }}>
-                    Créer un tableau
+                    Créer un espace de travail
                 </Typography>
             </Button>
-            <Modal open={open} onClose={handleOpen} aria-labelledby="modal-new-board">
+            <Modal open={open} onClose={handleOpen} aria-labelledby="modal-new-workspace">
                 <Box sx={style}>
-                    <Typography id="modal-new-board" variant="h6" component="h2">
-                        Un nouveau tableau ?
+                    <Typography id="modal-new-workspace" variant="h6" component="h2">
+                        Un nouvel espace de travail ?
                     </Typography>
                     <form onSubmit={handleSubmit}>
                         <FormGroup>
