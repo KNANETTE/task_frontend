@@ -5,7 +5,6 @@
 
   color-scheme: light dark;
   color: rgba(0, 0, 0, 0.87);
-  background: #f0f0f0;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -22,6 +21,7 @@ body,
   padding: 0;
   text-align: center;
   display: block;
+  background: #f0f0f0;
 }
 
 a {
