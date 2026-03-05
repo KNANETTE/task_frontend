@@ -37,8 +37,6 @@ export default function Login() {
                 <div className="auth-card">
                     <div className="auth-icon">👤</div>
                     <h2 className="auth-title">Connexion</h2>
-
-
                     <form onSubmit={handleSubmit}>
                         <div className="input-group">
                             <label>username / Email</label>
@@ -52,7 +50,6 @@ export default function Login() {
                                 />
                             </div>
                         </div>
-
                         <div className="input-group">
                             <label>Mot de passe</label>
                             <div className="input-box">
@@ -65,18 +62,9 @@ export default function Login() {
                                 />
                             </div>
                         </div>
-
-                        <div className="auth-options">
-                            <label><input type="checkbox" /> Se souvenir de moi?</label>
-                            <a href="#">Mot de passe oublié?</a>
-                        </div>
-
                         <button type="submit" className="btn btn-primary">Login</button>
-
                     </form>
-
                     {error && <p className="error-message">{error}</p>}
-
                 </div>
             </div>
         </>
