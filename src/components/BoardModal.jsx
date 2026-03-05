@@ -1,13 +1,24 @@
-import { useState } from 'react';
+// import { useState } from 'react';
+// import Box from '@mui/material/Box';
+// import Button from '@mui/material/Button';
+// import Typography from '@mui/material/Typography';
+// import Modal from '@mui/material/Modal';
+// import AddIcon from '@mui/icons-material/Add';
+// import TextField from '@mui/material/TextField';
+// import FormGroup from '@mui/material/FormGroup';
+import { createBoard } from '../services/boardServices';
+import { useNavigate, useParams } from 'react-router';
+import { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
 import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';
+import Modal from 'react-bootstrap/Modal';
 import AddIcon from '@mui/icons-material/Add';
 import TextField from '@mui/material/TextField';
 import FormGroup from '@mui/material/FormGroup';
-import { createBoard } from '../services/boardServices';
-import { useNavigate, useParams } from 'react-router';
+import { createWorkspace } from '../services/workspaceServices';
+// import { useNavigate } from 'react-router';
 
 const style = {
     position: 'absolute',
@@ -21,45 +32,81 @@ const style = {
     p: 4,
 };
 
-export default function BoardModal() {
+export default function BoardModal({ onResult, onCreated }) {
+    const { id } = useParams()
     const [open, setOpen] = useState(false);
-    const [error, setError] = useState(null)
     const [title, setTitle] = useState("")
     const [background, setBackground] = useState("#777777")
+    const [description, setDescription] = useState("")
     const token = localStorage.getItem("token")
-    const { workspace } = useParams()
-    const navigate = useNavigate()
 
     const handleOpen = () => setOpen(!open);
 
-    async function handleSubmit(e) {
-        e.preventDefault()
-        setError(null)
-
+    async function handleSubmit() {
+        // console.log("ok")
         try {
             const boardData = JSON.stringify({
                 data: {
                     title: title,
                     background: background,
-                    workspace: workspace
+                    description: description,
+                    workspace: id,
                 }
             })
             const res = await createBoard(token, boardData)
             if (!res.ok) {
-                setError("something went wrong")
+                onResult({ success: false, message: "Une erreur server s'est produite, veuillez réessayer plus tard." })
+                console.error(res)
                 return
             }
-            const data = await res.json()
-            navigate(`/boards/${data.data.documentId}`)
-
+            onCreated(id)
+            onResult({ success: true, message: "Noueau board créé!" })
         } catch (error) {
-            setError("something went wrong")
+            onResult({ success: false, message: "Une erreur réseau s'est produite, veuillez réessayer plus tard." })
+            console.error(error)
         }
+        handleOpen()
+        setTitle("")
+        setDescription("")
     }
 
     return (
         <>
-            <Button variant="contained" color='warning' startIcon={<AddIcon />} onClick={handleOpen}>
+            <Button variant='warning' onClick={handleOpen} className="d-flex align-self-center justify-content-center justify-self-center">
+                <AddIcon />
+                <Typography noWrap component="div" sx={{ display: { xs: 'none', sm: 'block' } }}>
+                    Créer un board
+                </Typography>
+            </Button>
+            <Modal show={open} onHide={handleOpen} className="rounded" centered backdrop="static">
+                <Modal.Header closeButton />
+                <Modal.Body>
+                    <Box>
+                        <Form className='p-2 gap-1'>
+                            <Form.Group controlId='title' className="mb-4">
+                                <Form.Label>Titre</Form.Label>
+                                <Form.Control type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
+                            </Form.Group>
+                            <Form.Group controlId='description' className="mb-4">
+                                <Form.Label>Description</Form.Label>
+                                <Form.Control as="textarea" rows={4} value={description} onChange={(e) => setDescription(e.target.value)} />
+                            </Form.Group>
+                            <Form.Group controlId='color'>
+                                <Form.Label>Couleur d'arrière plan</Form.Label>
+                                <Form.Control type="color" value={background} onChange={(e) => setBackground(e.target.value)} style={{
+                                    width: "100%",
+                                    height: "100px",
+                                }} />
+                            </Form.Group>
+                        </Form>
+                    </Box>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant='secondary' onClick={handleOpen}>Annuler</Button>
+                    <Button variant='primary' onClick={handleSubmit}>Enregistrer</Button>
+                </Modal.Footer>
+            </Modal>
+            {/* <Button variant="contained" color='warning' startIcon={<AddIcon />} onClick={handleOpen}>
                 <Typography noWrap component="div" sx={{ display: { xs: 'none', sm: 'block' } }}>
                     Créer un tableau
                 </Typography>
@@ -78,7 +125,7 @@ export default function BoardModal() {
                         </FormGroup>
                     </form>
                 </Box>
-            </Modal>
+            </Modal> */}
         </>
     );
 }
