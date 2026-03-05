@@ -3,7 +3,7 @@ import AuthGate from "./components/AuthGate"
 import About from "./pages/About"
 import Auth from "./pages/Auth"
 import Board from "./pages/Board"
-import Dashboard from "./pages/Dashboard"
+import Workspaces from "./pages/Workspaces"
 import Profile from "./pages/Profile"
 import Workspace from "./pages/Workspace"
 
@@ -12,12 +12,12 @@ function App() {
   return (
     <AuthGate>
       <Routes>
-        <Route index element={<Dashboard />} />
+        <Route index element={<Workspaces />} />
         <Route path="/auth" element={<Auth />} />
         <Route path="/about" element={<About />} />
+        <Route path="/:id" element={<Workspace />} />
+        <Route path="/:boards/:id" element={<Board />} />
         <Route path="/profile" element={<Profile />} />
-        <Route path="/boards/:id" element={<Board />} />
-        <Route path="/workspaces/:id" element={<Workspace />} />
       </Routes>
     </AuthGate>
   )
