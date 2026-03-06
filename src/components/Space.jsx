@@ -33,7 +33,7 @@ export default function Space({ content, url, onDelete, onResult, workspace = tr
     }
 
     return (
-        <Card sx={{ height: 300, maxWidth: 275 }}>
+        <Card sx={{ height: 300, width: 275 }}>
             <CardActions className='d-flex flex-row-reverse'>
                 <Button variant='danger' color='white' onClick={handleDelete}><DeleteIcon /></Button>
             </CardActions>
