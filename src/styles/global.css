@@ -29,3 +29,17 @@ input {
     color: #7b3fe4;
     cursor: pointer;
 }
+
+.horizontal-scrollbar {
+    display: flex;
+    overflow-x: auto;
+    gap: 2rem;
+    padding: 1rem;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    flex-wrap: nowrap;
+}
+
+.horizontal-scroll>* {
+    scroll-snap-align: start;
+}

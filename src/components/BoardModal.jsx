@@ -55,9 +55,9 @@ export default function BoardModal({ onResult, onCreated }) {
             </Button>
             <Modal show={open} onHide={handleOpen} className="rounded" centered backdrop="static">
                 <Modal.Header closeButton />
-                <Modal.Body>
-                    <Box>
-                        <Form className='p-2 gap-1'>
+                <Form className='p-2 gap-1'>
+                    <Modal.Body>
+                        <Box>
                             <Form.Group controlId='title' className="mb-4">
                                 <Form.Label>Titre</Form.Label>
                                 <Form.Control type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
@@ -73,13 +73,13 @@ export default function BoardModal({ onResult, onCreated }) {
                                     height: "100px",
                                 }} />
                             </Form.Group>
-                        </Form>
-                    </Box>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant='secondary' onClick={handleOpen}>Annuler</Button>
-                    <Button variant='primary' onClick={handleSubmit}>Enregistrer</Button>
-                </Modal.Footer>
+                        </Box>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant='secondary' onClick={handleOpen}>Annuler</Button>
+                        <Button variant='primary' onClick={handleSubmit}>Enregistrer</Button>
+                    </Modal.Footer>
+                </Form>
             </Modal>
         </>
     );
