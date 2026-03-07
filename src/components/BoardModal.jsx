@@ -1,12 +1,12 @@
-import { createBoard } from '../services/boardServices';
-import { useParams } from 'react-router';
-import { useState } from 'react';
+import AddIcon from '@mui/icons-material/Add';
 import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import Typography from '@mui/material/Typography';
 import Modal from 'react-bootstrap/Modal';
-import AddIcon from '@mui/icons-material/Add';
+import { useParams } from 'react-router';
+import { createBoard } from '../services/boardServices';
 
 export default function BoardModal({ onResult, onCreated }) {
     const { id } = useParams()
