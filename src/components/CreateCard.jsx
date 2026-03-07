@@ -1,28 +1,55 @@
-import Button from "react-bootstrap/Button";
+import { Add } from "@mui/icons-material";
 import Box from "@mui/material/Box";
+import { useState } from "react";
+import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import FormControl from "react-bootstrap/esm/FormControl";
-import FormGroup from "react-bootstrap/esm/FormGroup";
-import FormLabel from "react-bootstrap/esm/FormLabel";
-import { Add } from "@mui/icons-material";
-import { useState } from "react";
+import { createCard } from "../services/cardServices";
 
-export default function CreateCard({ id, onResult, onCreated }) {
+export default function CreateCard({ id, order, onResult, onCreated }) {
     const token = localStorage.getItem("token")
-    const [clicked, setClicked] = useState(true)
+    const [clicked, setClicked] = useState(false)
+    const [content, setContent] = useState("")
     const handleClicked = () => { setClicked(!clicked) }
-    const handleSubmit = async () => { }
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        const newCard = JSON.stringify({
+            data: {
+                order,
+                content,
+                background: "#999",
+                list: id
+            }
+        })
+        try {
+            const resp = await createCard(token, newCard)
+            if (!resp.ok) {
+                onResult({ success: false, message: "Erreur client / server" })
+                console.error(resp)
+                return
+            }
+            onCreated()
+            onResult({ success: true, message: "Tâche ajoutée!" })
+            handleClicked()
+            setContent("")
+        } catch (error) {
+            onResult({ success: false, message: "Problème de connexion!" })
+            console.error(error)
+        }
+    }
 
     const addButton = (<Button onClick={handleClicked} className="text-primary" style={{ background: "#0000", border: 0 }}><Add /></Button>)
     const addForm = (
-        <Box>
-            <Form>
-                <FormGroup controlId="title">
-                    <FormLabel>Titre</FormLabel>
-                </FormGroup>
+        <Box className="pt-3">
+            <Form onSubmit={handleSubmit}>
+                <FormControl as="textarea" value={content} onChange={(e) => { setContent(e.target.value) }} />
+                <Box className="d-flex w-100 justify-content-evenly mt-3">
+                    <Button variant="secondary" onClick={handleClicked}>Annuler</Button>
+                    <Button variant="primary" type="submit">Créer</Button>
+                </Box>
             </Form>
         </Box>
     )
-    if(!clicked) return addButton
+    if (!clicked) return addButton
     return addForm
 }
