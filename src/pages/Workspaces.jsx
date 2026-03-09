@@ -37,7 +37,7 @@ export default function Workspaces() {
                 console.error(response)
                 return
             }
-            setContent(data.workspaces.reverse())
+            setContent(data.workspaces)
             setLoading(false)
         } catch (err) {
             handleToast({ success: false, message: "Une erreur server s'est produite, veuillez réessayer plus tard." })
