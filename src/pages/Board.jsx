@@ -1,14 +1,16 @@
-import Box from "@mui/material/Box"
-import CircularProgress from "@mui/material/CircularProgress"
-import Divider from "@mui/material/Divider"
-import Toolbar from "@mui/material/Toolbar"
-import { useEffect, useState } from "react"
-import { useParams } from "react-router"
-import BoardList from "../components/BoardList"
-import CreateList from "../components/CreateList"
-import Navbar from "../components/Navbar"
-import NotificationToast from "../components/NotificationToast"
-import { getLists } from "../services/listServices"
+import Box from "@mui/material/Box";
+import CircularProgress from "@mui/material/CircularProgress";
+import Divider from "@mui/material/Divider";
+import Toolbar from "@mui/material/Toolbar";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router";
+import BoardList from "../components/BoardList";
+import CreateList from "../components/CreateList";
+import Navbar from "../components/Navbar";
+import NotificationToast from "../components/NotificationToast";
+import { getLists, updateList } from "../services/listServices";
+import { DndContext, closestCorners } from "@dnd-kit/core";
+import { SortableContext, arrayMove, horizontalListSortingStrategy, verticalListSortingStrategy } from "@dnd-kit/sortable";
 
 export default function Boards() {
     const { bid } = useParams()
@@ -20,6 +22,8 @@ export default function Boards() {
         success: false,
     })
     const [board, setBoard] = useState(null)
+    const [lists, setLists] = useState([])
+    const handleClose = () => { setToast({ ...toast, show: false }) }
     const handleToast = ({ success, message }) => {
         setToast({
             show: true,
@@ -27,7 +31,35 @@ export default function Boards() {
             success
         })
     }
-    const handleClose = () => { setToast({ ...toast, show: false }) }
+    const handleReorder = async (newList) => {
+        const reordered = newList.map((list, order) => ({ ...list, order }))
+        const previous = [...lists]
+        setLists(reordered)
+
+        try {
+            await Promise.all(
+                reordered.map(list => updateList(
+                    token,
+                    list.documentId,
+                    JSON.stringify({ data: { order: list.order } })
+                ))
+            )
+        } catch (error) {
+            console.error(error)
+            setLists(previous)
+            handleToast({ success: false, message: "Erreur" })
+        }
+    }
+    const handleDragEnd = ({ active, over }) => {
+        if (!over) return
+        if (active.id !== over.id) {
+            const oldIndex = lists.findIndex(l => l.order === active.id)
+            const newIndex = lists.findIndex(l => l.order === over.id)
+
+
+            handleReorder(arrayMove(lists, oldIndex, newIndex))
+        }
+    }
 
     async function fetchBoard(id) {
         try {
@@ -42,6 +74,7 @@ export default function Boards() {
             }
 
             setBoard(resData.data)
+            setLists(resData.data.lists)
         } catch (error) {
             handleToast({ success: false, message: "Problème de connexion!" })
             console.error(error)
@@ -59,9 +92,13 @@ export default function Boards() {
             <Toolbar sx={{ margin: "0.5rem" }} />
             <h1>{board.title}</h1>
             <Divider />
-            <Box className="horizontal-scrollbar">
-                {board.lists.map(list => <BoardList key={list.id} content={list} onDeleted={fetchBoard} onResult={handleToast} />)}
-                <CreateList order={board.lists.length} onCreated={fetchBoard} onResult={handleToast} />
+            <Box className="horizontal-scrollbar h-100">
+                <DndContext onDragEnd={handleDragEnd} collisionDetection={closestCorners}>
+                    <SortableContext items={lists.map(l => l.order)} strategy={horizontalListSortingStrategy}>
+                        {lists.map(list => <BoardList key={list.id} content={list} onDeleted={fetchBoard} onResult={handleToast} />)}
+                    </SortableContext>
+                    <CreateList order={lists.length} onCreated={fetchBoard} onResult={handleToast} />
+                </DndContext>
             </Box>
             <NotificationToast show={toast.show} message={toast.message} success={toast.success} onCLose={handleClose} />
         </>
