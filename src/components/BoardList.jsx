@@ -6,10 +6,20 @@ import Button from "react-bootstrap/Button";
 import { useParams } from "react-router";
 import { deleteList } from "../services/listServices";
 import ListCards from "./ListCards";
+import { useSortable } from "@dnd-kit/sortable"
+import { CSS } from "@dnd-kit/utilities";
 
 export default function BoardList({ content, onDeleted, onResult }) {
     const token = localStorage.getItem("token")
     const { bid } = useParams()
+    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: content.order })
+    const style = {
+        transform: CSS.Transform.toString(transform),
+        transition,
+        minWidth: 340,
+        background: "#eee",
+        height: "fit-content",
+    }
     const handleDelete = async () => {
         try {
             const resp = await deleteList(token, content.documentId)
@@ -25,8 +35,9 @@ export default function BoardList({ content, onDeleted, onResult }) {
             console.error(e)
         }
     }
+    const handleUpdate = async()=>{}
     return (
-        <Card sx={{ minWidth: 340, background: "#eee", height: "fit-content" }}>
+        <Card ref={setNodeRef} style={style} {...attributes} {...listeners}>
             <CardContent sx={{ fontWeight: "bold", fontSize: "large" }} className="d-flex justify-content-between">
                 {content.title}
                 <Box className="d-flex justify-content-evenly align-items-start" sx={{ width: "30%" }}>
