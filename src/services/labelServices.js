@@ -1,5 +1,5 @@
 export async function getLabels(token) {
-    const response = await fetch(`http://localhost:1337/api/labels`, {
+    const response = await fetch(`http://localhost:1337/api/labels?sort=title:asc`, {
         headers: {
             "Authorization": `Bearer ${token}`,
         },

@@ -1,5 +1,5 @@
 export async function getBoards(token, workspaceID = null) {
-    const response = await fetch(`http://localhost:1337/api/workspaces/${workspaceID}?populate=boards`, {
+    const response = await fetch(`http://localhost:1337/api/workspaces/${workspaceID}?populate[boards][sort]=updatedAt:desc`, {
         headers: {
             "Authorization": `Bearer ${token}`,
         },
