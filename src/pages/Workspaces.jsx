@@ -4,10 +4,10 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from "@mui/material/Typography";
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
-import WorkspaceModal from '../components/WorkspaceModal';
 import NotificationToast from '../components/NotificationToast';
-import { getWorkspaces } from '../services/workspaceServices';
 import Spaces from '../components/Spaces';
+import WorkspaceModal from '../components/WorkspaceModal';
+import { getWorkspaces } from '../services/workspaceServices';
 
 export default function Workspaces() {
     const token = localStorage.getItem('token')
