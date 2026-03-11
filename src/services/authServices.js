@@ -10,7 +10,6 @@ export async function register(username, email, password) {
             password
         })
     })
-
     return response
 }
 
@@ -33,7 +32,18 @@ export async function isLogged(token) {
         headers: {
             Authorization: `Bearer ${token}`
         }
-    });
+    })
+    return response
+}
 
+export async function updateUSer(token, id, data) {
+    const response = await fetch(`http://localhost:1337/api/users/${id}`, {
+        method: "PUT",
+        headers: {
+            "Content-type": "application/json",
+            "Authorization": `Bearer ${token}`,
+        },
+        body: data
+    })
     return response
 }

@@ -1,57 +1,114 @@
-import { useEffect, useState } from "react"
-import Navbar from "../components/Navbar"
-import CssBaseline from '@mui/material/CssBaseline'
-import Box from '@mui/material/Box'
-import Container from '@mui/material/Container'
-import Avatar from '@mui/material/Avatar'
-import Typography from '@mui/material/Typography'
-import Button from '@mui/material/Button'
-import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
-import Toolbar from "@mui/material/Toolbar"
-import CircularProgress from "@mui/material/CircularProgress"
-import TextField from "@mui/material/TextField"
-import Snackbar from "@mui/material/Snackbar"
+import Avatar from '@mui/material/Avatar';
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CircularProgress from "@mui/material/CircularProgress";
+import Container from '@mui/material/Container';
+import CssBaseline from '@mui/material/CssBaseline';
+import Snackbar from "@mui/material/Snackbar";
+import TextField from "@mui/material/TextField";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from '@mui/material/Typography';
+import { useEffect, useState } from "react";
+import Button from 'react-bootstrap/Button';
+import Navbar from "../components/Navbar";
+import NotificationToast from "../components/NotificationToast";
+import { isLogged, updateUSer } from '../services/authServices';
 
 
 export default function Profile() {
-    const [user, setUser] = useState(null)
+    const token = localStorage.getItem("token")
+    const [user, setUser] = useState({
+        id: 0,
+        email: "",
+        username: "",
+        biography: "",
+    })
+    const [secButVal, setSecButVal] = useState("ACTIVER")
+    const [mainButVal, setMainButVal] = useState("ENREGISTRER")
+    const [disactivate, setDisactivate] = useState(true)
     const [loading, setLoading] = useState(true)
+    const [toast, setToast] = useState({
+        show: false,
+        message: "",
+        success: false,
+    })
 
-    const [username, setUsername] = useState(localStorage.getItem("username"))
-    const [email, setEmail] = useState(localStorage.getItem("useremail"))
-    const [bio, setBio] = useState("")
-    const [open, setOpen] = useState(false)
-    const handleClose = () => setOpen(false)
+    const handleClose = () => { setToast({ ...toast, show: false }) }
 
+    const handleToast = ({ success, message }) => {
+        setToast({
+            show: true,
+            message,
+            success,
+        })
+    }
 
-    const updateProfile = async () => {
+    const ActivateForm = () => {
+        setDisactivate(!disactivate)
+        setSecButVal(!disactivate ? "ACTIVER" : "DESACTIVER")
+    }
+
+    const getLoggedInUser = async () => {
         try {
-            const token = localStorage.getItem("jwt")
-
-            const response = await fetch(`http://localhost:1337/api/users/${user.id}`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                    username,
-                    email,
-                    bio
-                })
-            })
-
-            if (!response.ok) {
-                throw new Error("Erreur lors de la mise à jour")
+            const resp = await isLogged(token)
+            const data = await resp.json()
+            if (!resp.ok) {
+                console.error(resp)
+                handleToast({ success: false, message: "Erreur client/serveur" })
+                return
             }
-            setOpen(true)
-
+            setUser(data)
         } catch (error) {
             console.error(error)
-            alert("Impossible de mettre à jour le profil.")
+            handleToast({ success: false, message: "Problème de connexion" })
+        }
+        setLoading(false)
+    }
+
+    const updateProfile = async (e) => {
+        e.preventDefault()
+        setMainButVal(<CircularProgress color='#000' size={20} />)
+        const data = JSON.stringify(user)
+        try {
+            const resp = await updateUSer(token, user.id, data)
+            setMainButVal("ENREGISTRER")
+            if (!resp.ok) {
+                console.error(resp)
+                handleToast({ success: false, message: "Erreur client/serveur" })
+                return
+            }
+            handleToast({ success: true, message: "Profile mise à jour avec succès!" })
+        } catch (error) {
+            console.error(error)
+            handleToast({ success: false, message: "Problème de connexion" })
         }
     }
+
+    const userForm = (
+        <CardContent sx={{ textAlign: "center" }}>
+            <Avatar sx={{ width: 80, height: 80, margin: "0 auto", mb: 2 }}>
+                {user.username.slice(0, 2).toUpperCase()}
+            </Avatar>
+
+            <form onSubmit={updateProfile}>
+                <TextField label="Nom d'utilisateur" fullWidth margin="normal" value={user.username} onChange={(e) => setUser({ ...user, username: e.target.value })} required disabled={disactivate} />
+                <TextField label="Email" fullWidth margin="normal" value={user.email} onChange={(e) => setUser({ ...user, email: e.target.value })} required disabled={disactivate} />
+                <TextField label="Biography" fullWidth margin="normal" multiline rows={3} value={user.biography} onChange={(e) => setUser({ ...user, biography: e.target.value })} disabled={disactivate} />
+
+                <Button variant="secondary" className="m-2" onClick={ActivateForm}>{secButVal}</Button>
+                <Button variant="primary" type="submit" className="m-2" disabled={disactivate}>{mainButVal}</Button>
+            </form>
+        </CardContent>
+    )
+
+    const loadingContent = (
+        <CardContent>
+            <CircularProgress size={75} />
+        </CardContent>
+    )
+
+    useEffect(() => { getLoggedInUser() }, [])
 
     return (
         <Box sx={{ width: "100%" }}>
@@ -60,66 +117,10 @@ export default function Profile() {
             <Toolbar />
             <Container maxWidth="sm" sx={{ mt: 4 }}>
                 <Card sx={{ p: 2 }}>
-                    <CardContent sx={{ textAlign: "center" }}>
-                        <Avatar sx={{ width: 80, height: 80, margin: "0 auto", mb: 2 }}>
-                            {username.slice(0, 2).toUpperCase()}
-                        </Avatar>
-
-                        <Typography variant="h5" sx={{ fontWeight: "bold", mb: 2 }}>
-                    
-                        </Typography>
-
-                        
-                        <TextField
-                            label="Nom d'utilisateur"
-                            fullWidth
-                            margin="normal"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
-                        />
-
-                        <TextField
-                            label="Email"
-                            fullWidth
-                            margin="normal"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                        />
-
-                        <TextField
-                            label="Bio"
-                            fullWidth
-                            margin="normal"
-                            multiline
-                            rows={3}
-                            value={bio}
-                            onChange={(e) => setBio(e.target.value)}
-                        />
-
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            sx={{ mt: 2 }}
-                            onClick={updateProfile}
-
-                        >
-                        
-                        </Button>
-                    </CardContent>
+                    {loading ? loadingContent : userForm}
                 </Card>
             </Container>
-            <Snackbar
-    open={open}
-    autoHideDuration={3000}
-    onClose={handleClose}
-    message="Profil mis à jour avec succès !"
-/>  
-    <Snackbar
-    open={open}
-    autoHideDuration={3000}
-    onClose={handleClose}
-    message="Profil mis à jour avec succès !"
-/>
- </Box>
+            <NotificationToast show={toast.show} message={toast.message} success={toast.success} onCLose={handleClose} />
+        </Box>
     )
 }
