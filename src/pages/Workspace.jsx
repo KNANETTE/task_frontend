@@ -9,6 +9,8 @@ import Navbar from "../components/Navbar";
 import Spaces from "../components/Spaces";
 import NotificationToast from '../components/NotificationToast';
 import { getBoards } from '../services/boardServices';
+import Box from '@mui/material/Box';
+import WorkspaceModal from "../components/WorkspaceModal"
 
 export default function Workspace() {
     const { id } = useParams()
@@ -29,7 +31,7 @@ export default function Workspace() {
     }
     const handleClose = () => setToast({ ...toast, show: false })
 
-    async function fetchWorkspace(id) {
+    async function fetchWorkspace() {
         const response = await getBoards(token, id)
         const data = await response.json()
         try {
@@ -46,20 +48,22 @@ export default function Workspace() {
         }
     }
 
-    useEffect(() => { fetchWorkspace(id) }, [id, token])
+    useEffect(() => { fetchWorkspace() }, [id, token])
     if (loading) return <CircularProgress />
     return (
         <>
-            <Toolbar sx={{ margin: "0.5rem" }} />
             <Navbar />
-
-            <div className="d-flex flex-column gap-2">
-                <h1>{workspace.title}</h1>
-                <BoardModal onResult={handleToast} onCreated={fetchWorkspace} />
-                <NotificationToast show={toast.show} message={toast.message} onCLose={handleClose} success={toast.success} />
-                <Divider sx={{ margin: "1rem" }} />
-            </div>
-            <Typography variant="h5" align="center" color="secondary">VOS PROJETS</Typography>
+            <Box sx={{ background: workspace.background, color: "#363636", p: 3 }}>
+                <Toolbar sx={{ margin: "0.5rem" }} />
+                <Box className="d-flex justify-content-evenly m-2">
+                    <Typography variant='h3'>{workspace.title}</Typography>
+                    <Box className="d-flex">
+                        <WorkspaceModal content={workspace} onCreated={fetchWorkspace} onResult={handleToast} />
+                        <BoardModal onResult={handleToast} onCreated={fetchWorkspace} />
+                    </Box>
+                </Box>
+                <Typography>{workspace.description}</Typography>
+            </Box>
             <Spaces content={workspace.boards} onDelete={fetchWorkspace} onResult={handleToast} workspace={id} />
         </>
     )

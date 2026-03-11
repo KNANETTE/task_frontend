@@ -5,56 +5,68 @@ import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
-import { createWorkspace } from '../services/workspaceServices';
+import { createWorkspace, updateWorkspace } from '../services/workspaceServices';
+import { Add, Edit } from '@mui/icons-material';
 
-export default function WorkspaceModal({ OnResult, onCreated }) {
+export default function WorkspaceModal({ onResult, onCreated, content = "" }) {
     const [open, setOpen] = useState(false)
-    const [title, setTitle] = useState("")
-    const [background, setBackground] = useState("#777777")
-    const [visibility, setVisibility] = useState(true)
-    const [description, setDescription] = useState("")
+    const [title, setTitle] = useState(content ? content.title : "")
+    const [visibility, setVisibility] = useState(content ? content.public : true)
+    const [background, setBackground] = useState(content ? content.background : "#777777")
+    const [description, setDescription] = useState(content ? content.description : "")
     const token = localStorage.getItem("token")
     const handleOpen = () => setOpen(!open)
 
+    const button = content ? (
+        <Button variant='outline-none' onClick={handleOpen} className="text-secondary">
+            <Edit fontSize='large' />
+        </Button>
+    ) : (
+        <Button variant='outline-none' onClick={handleOpen} className="d-flex center align-items-center gap-2 text-primary">
+            <AddIcon fontSize='large' />
+            <Typography noWrap component="div" variant='h5' sx={{ display: { xs: 'none', sm: 'block' } }}>
+                Créer un workspace
+            </Typography>
+        </Button>
+    )
+
     async function handleSubmit(e) {
         e.preventDefault()
+        const workspaceData = {
+            title: title,
+            public: visibility,
+            background: background,
+            description: description,
+        }
+        const data = JSON.stringify({ data: workspaceData })
 
         try {
-            const workspaceData = JSON.stringify({
-                data: {
-                    title: title,
-                    public: visibility,
-                    background: background,
-                    description: description,
-                }
-            })
-            const res = await createWorkspace(token, workspaceData)
+            const res = !content ?
+                await createWorkspace(token, data) :
+                await updateWorkspace(token, content.documentId, data)
             if (!res.ok) {
-                OnResult({ success: false, message: "Une erreur server s'est produite, veuillez réessayer plus tard." })
+                onResult({ success: false, message: "Une erreur server s'est produite, veuillez réessayer plus tard." })
                 console.error(res)
                 return
             }
             onCreated()
-            OnResult({ success: true, message: "Noueau workspace créé!" })
+            onResult({ success: true, message: "👍🏽" })
         } catch (error) {
-            OnResult({ success: false, message: "Une erreur réseau s'est produite, veuillez réessayer plus tard." })
+            onResult({ success: false, message: "Une erreur réseau s'est produite, veuillez réessayer plus tard." })
             console.error(error)
         }
         handleOpen()
-        setTitle("")
-        setDescription("")
+        setTitle(content ? workspaceData.title : "")
+        setDescription(content ? content.description : "")
     }
 
     return (
         <>
-            <Button variant='outline-none' onClick={handleOpen} className="d-flex align-self-center align-items-center gap-2 text-primary">
-                <AddIcon fontSize='large'/>
-                <Typography noWrap component="div" variant='h5' sx={{ display: { xs: 'none', sm: 'block' } }}>
-                    Créer un workspace
-                </Typography>
-            </Button>
+            {button}
             <Modal show={open} onHide={handleOpen} className="rounded" centered backdrop="static">
-                <Modal.Header closeButton />
+                <Modal.Header closeButton >
+                    <Typography sx={{fontWeight:"bolder"}}>WORKSPACE</Typography>
+                </Modal.Header>
                 <Modal.Body>
                     <Box>
                         <Form className='p-2 gap-1'>
