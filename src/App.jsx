@@ -16,7 +16,7 @@ function App() {
         <Route path="/auth" element={<Auth />} />
         <Route path="/about" element={<About />} />
         <Route path="/:id" element={<Workspace />} />
-        <Route path="/:wid/:bid" element={<Board />} />
+        <Route path="/:id/:bid" element={<Board />} />
         <Route path="/profile" element={<Profile />} />
       </Routes>
     </AuthGate>
