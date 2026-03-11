@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import AddIcon from '@mui/icons-material/Add';
 import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import Typography from '@mui/material/Typography';
 import Modal from 'react-bootstrap/Modal';
-import AddIcon from '@mui/icons-material/Add';
 import { createWorkspace } from '../services/workspaceServices';
 
 export default function WorkspaceModal({ OnResult, onCreated }) {
