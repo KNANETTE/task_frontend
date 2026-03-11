@@ -1,4 +1,4 @@
-export async function getCards(token, listID = null) {
+export async function getCards(token, listID) {
     const response = await fetch(`http://localhost:1337/api/lists/${listID}?populate[cards][sort]=order:asc`, {
         headers: {
             "Authorization": `Bearer ${token}`,

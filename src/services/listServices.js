@@ -1,5 +1,5 @@
 export async function getLists(token, boardID = null) {
-    const response = await fetch(`http://localhost:1337/api/boards/${boardID}?populate[lists][sort]=order:asc`, {
+    const response = await fetch(`http://localhost:1337/api/boards/${boardID}?populate[lists][sort]=order:asc&populate[lists][populate][cards][sort]=order:asc`, {
         headers: {
             "Authorization": `Bearer ${token}`,
         },
