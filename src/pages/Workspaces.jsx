@@ -56,7 +56,7 @@ export default function Workspaces() {
                 <NotificationToast show={toast.show} message={toast.message} onCLose={handleClose} success={toast.success} />
                 <Divider sx={{ margin: "1rem" }} />
             </div>
-            <Typography variant="h5" align="center" color="secondary">VOS ESPACES 🌌</Typography>
+            <Typography variant="h5" align="center">VOS ESPACES 🌌</Typography>
             <Spaces content={content} onDelete={fetchWorkspaces} onResult={handleToast} />
         </>
     )

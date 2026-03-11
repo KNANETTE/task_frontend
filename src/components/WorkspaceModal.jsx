@@ -47,9 +47,9 @@ export default function WorkspaceModal({ OnResult, onCreated }) {
 
     return (
         <>
-            <Button variant='warning' onClick={handleOpen} className="d-flex align-self-center justify-content-center justify-self-center">
-                <AddIcon />
-                <Typography noWrap component="div" sx={{ display: { xs: 'none', sm: 'block' } }}>
+            <Button variant='outline-none' onClick={handleOpen} className="d-flex align-self-center align-items-center gap-2 text-primary">
+                <AddIcon fontSize='large'/>
+                <Typography noWrap component="div" variant='h5' sx={{ display: { xs: 'none', sm: 'block' } }}>
                     Créer un workspace
                 </Typography>
             </Button>
