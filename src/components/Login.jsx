@@ -44,6 +44,7 @@ export default function Login() {
                                     placeholder="john.doh@xyz.com"
                                     value={identifier}
                                     onChange={(e) => setIdentifier(e.target.value)}
+                                    required
                                 />
                             </div>
                         </div>
@@ -56,6 +57,7 @@ export default function Login() {
                                     placeholder="------------"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
+                                    required
                                 />
                             </div>
                         </div>

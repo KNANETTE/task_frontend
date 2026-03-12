@@ -67,15 +67,15 @@ export default function BoardModal({ onResult, onCreated, content = null }) {
                         <Box>
                             <Form.Group controlId='title' className="mb-4">
                                 <Form.Label>Titre</Form.Label>
-                                <Form.Control type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
+                                <Form.Control type="text" value={title} onChange={(e) => setTitle(e.target.value)} required/>
                             </Form.Group>
                             <Form.Group controlId='description' className="mb-4">
                                 <Form.Label>Description</Form.Label>
-                                <Form.Control as="textarea" rows={4} value={description} onChange={(e) => setDescription(e.target.value)} />
+                                <Form.Control as="textarea" rows={4} value={description} onChange={(e) => setDescription(e.target.value)} required/>
                             </Form.Group>
                             <Form.Group controlId='color'>
                                 <Form.Label>Couleur d'arrière plan</Form.Label>
-                                <Form.Control type="color" value={background} onChange={(e) => setBackground(e.target.value)} style={{
+                                <Form.Control type="color" value={background} required onChange={(e) => setBackground(e.target.value)} style={{
                                     width: "100%",
                                     height: "100px",
                                 }} />

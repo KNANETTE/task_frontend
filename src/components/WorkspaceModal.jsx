@@ -63,28 +63,28 @@ export default function WorkspaceModal({ onResult, onCreated, content = "" }) {
             {button}
             <Modal show={open} onHide={handleOpen} className="rounded" centered backdrop="static">
                 <Modal.Header closeButton >
-                    <Typography sx={{fontWeight:"bolder"}}>WORKSPACE</Typography>
+                    <Typography sx={{ fontWeight: "bolder" }}>WORKSPACE</Typography>
                 </Modal.Header>
                 <Modal.Body>
                     <Box>
                         <Form className='p-2 gap-1'>
                             <Form.Group controlId='title' className="mb-4">
                                 <Form.Label>Titre</Form.Label>
-                                <Form.Control type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
+                                <Form.Control type="text" value={title} onChange={(e) => setTitle(e.target.value)} required />
                             </Form.Group>
                             <Form.Group controlId='description' className="mb-4">
                                 <Form.Label>Description</Form.Label>
-                                <Form.Control as="textarea" rows={4} value={description} onChange={(e) => setDescription(e.target.value)} />
+                                <Form.Control as="textarea" rows={4} value={description} onChange={(e) => setDescription(e.target.value)} required />
                             </Form.Group>
                             <Form.Group controlId='color'>
                                 <Form.Label>Couleur d'arrière plan</Form.Label>
-                                <Form.Control type="color" value={background} onChange={(e) => setBackground(e.target.value)} style={{
+                                <Form.Control type="color" value={background} onChange={(e) => setBackground(e.target.value)} required style={{
                                     width: "100%",
                                     height: "100px",
                                 }} />
                             </Form.Group>
                             <Form.Group controlId='visibility' className='d-flex justify-content-center mt-3'>
-                                <Form.Check type='switch' label='Public' checked={visibility} onChange={(e) => setVisibility(e.target.checked)} />
+                                <Form.Check type='switch' label='Public' checked={visibility} onChange={(e) => setVisibility(e.target.checked)} required />
                             </Form.Group>
                         </Form>
                     </Box>

@@ -39,7 +39,7 @@ export default function CreateCard({ id, order, onResult, onCreated }) {
     const addForm = (
         <Box className="pt-3">
             <Form onSubmit={handleSubmit}>
-                <FormControl as="textarea" value={content} onChange={(e) => { setContent(e.target.value) }} />
+                <FormControl as="textarea" value={content} onChange={(e) => { setContent(e.target.value) }} required />
                 <Box className="d-flex w-100 justify-content-evenly mt-3">
                     <Button variant="secondary" onClick={handleClicked}>Annuler</Button>
                     <Button variant="primary" type="submit">Créer</Button>

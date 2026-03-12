@@ -48,7 +48,7 @@ export default function CreateList({ order, onResult, onCreated }) {
             </CardActions>
             <Form className="pb-1" onSubmit={handleSubmit}>
                 <CardContent>
-                    <FormControl type="test" value={title} onChange={(e) => { setTitle(e.target.value) }} />
+                    <FormControl type="test" value={title} onChange={(e) => { setTitle(e.target.value) }} required/>
                 </CardContent>
                 <CardActions className="d-flex flex-row-reverse">
                     <Button type="submit" variant="success">Créer</Button>

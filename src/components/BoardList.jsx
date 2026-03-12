@@ -62,7 +62,7 @@ export default function BoardList({ list, cards, labels, onRequest, onResult }) 
     }
     const titleField = (
         <Form onSubmit={handleUpdate} className="d-flex flex-column gap-2">
-            <FormControl type="text" value={title} onChange={(e) => { setTitle(e.target.value) }} />
+            <FormControl type="text" value={title} onChange={(e) => { setTitle(e.target.value) }} required />
             <Box className="d-flex justify-content-evenly">
                 <Button variant="secondary" onClick={() => setOpen(!open)}>Annuler</Button>
                 <Button disabled={loading} type="submit">{loading ? <CircularProgress size={20} color="#000" /> : "Enregistrer"}</Button>

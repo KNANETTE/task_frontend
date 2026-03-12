@@ -48,6 +48,7 @@ export default function Register() {
                                 placeholder="ex. nanette"
                                 value={username}
                                 onChange={(e) => setUsername(e.target.value)}
+                                required
                             />
                         </div>
                     </div>
@@ -61,6 +62,7 @@ export default function Register() {
                                 placeholder="ex. test@us.com"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
+                                required
                             />
                         </div>
                     </div>
@@ -73,6 +75,7 @@ export default function Register() {
                                 type="password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
+                                required
                             />
                         </div>
                     </div>
