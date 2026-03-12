@@ -5,9 +5,12 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import ListGroupItem from "react-bootstrap/esm/ListGroupItem";
 import { deleteCard } from "../services/cardServices";
+import CardModal from "./CardModal";
+import { useState } from "react";
 
-export default function ListCard({ card, onDeleted, onResult }) {
+export default function ListCard({ card, labels, onDeleted, onResult }) {
     const token = localStorage.getItem("token")
+    const [show, setShow] = useState(false)
     const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
         id: `${card.id}`,
         animateLayoutChanges: (args) => defaultAnimateLayoutChanges({ ...args, wasDragging: true })
@@ -33,15 +36,18 @@ export default function ListCard({ card, onDeleted, onResult }) {
             console.error(error)
         }
     }
+    const handleShow = () => setShow(!show)
     return (
         <ListGroupItem
             ref={setNodeRef}
             style={style}
             {...attributes}
+            // onClick={handleShow}
             className="d-flex justify-content-between align-items-center"
         >
-            <Box {...listeners} sx={{ width: "80%" }} className="truncate-3">{card.content}</Box>
+            <Button onClick={handleShow} {...listeners} sx={{ width: "80%" }} className="truncate-3 text-dark">{card.content}</Button>
             <Button className="text-danger" onClick={handleDelete}><Delete /></Button>
+            <CardModal show={show} handleShow={handleShow} content={card} labels={labels} onRequest={onDeleted} onResult={onResult} />
         </ListGroupItem>
     )
 }

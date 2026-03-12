@@ -14,6 +14,7 @@ import Navbar from "../components/Navbar";
 import NotificationToast from "../components/NotificationToast";
 import { updateCard } from "../services/cardServices";
 import { getLists, updateList } from "../services/listServices";
+import { getLabels } from "../services/labelServices";
 
 export default function Board() {
     const { bid } = useParams()
@@ -21,7 +22,7 @@ export default function Board() {
     const [loading, setLoading] = useState(true)
     const [board, setBoard] = useState(null)
     const [lists, setLists] = useState([])
-    const [active, setActive] = useState(null)
+    const [labels, setLabels] = useState([])
     const [toast, setToast] = useState({
         show: false,
         message: "",
@@ -123,34 +124,6 @@ export default function Board() {
         handleListReorder(arrayMove(lists, oldIndex, newIndex))
     }
 
-    const handleCardDrag = (activeId, overId) => {
-        const sourceList = lists.find(list => list.cards.some(card => card.id == activeId))
-        let targetList = lists.find(list => list.cards.some(card => card.id == overId))
-
-        if (!sourceList || !targetList) return
-        if (!targetList && overId.startsWith("list-")) {
-            const listOrder = Number(overId.replace("list-", ""))
-            targetList = lists.find(list => list.order === listOrder)
-        }
-        if (sourceList.id !== targetList.id)
-            moveCardToAnotherList(activeId, sourceList, targetList)
-        else {
-            const oldIndex = sourceList.cards.findIndex(card => card.id == activeId)
-            const newIndex = sourceList.cards.findIndex(card => card.id == overId)
-
-            const newCards = arrayMove(sourceList.cards, oldIndex, newIndex)
-            handleCardReorder(newCards, sourceList)
-        }
-    }
-
-    const handleDragStart = (event) => {
-        const { active } = event
-        const id = `${active.id}`
-
-        if (id.startsWith("list-")) setActive({ type: "list", id })
-        else setActive({ type: "card", id })
-    }
-
     const handleDragOver = (event) => {
         const { active, over } = event
         if (!over) return
@@ -174,17 +147,14 @@ export default function Board() {
 
     const handleDragEnd = (event) => {
         const { active, over } = event
-        if (!over) {
-            setActive(null)
+        if (!over)
             return
-        }
 
         const activeId = `${active.id}`
         const overId = `${over.id}`
 
         if (activeId.startsWith("list-") && overId.startsWith("list-")) {
             handleListDrag(activeId, overId)
-            setActive(null)
             return
         }
 
@@ -196,10 +166,8 @@ export default function Board() {
                 targetList = lists.find(list => list.order === listOrder)
             }
 
-            if (!sourceList || !targetList) {
-                setActive(null)
+            if (!sourceList || !targetList)
                 return
-            }
 
             if (sourceList.id === targetList.id) {
                 const oldIndex = sourceList.cards.findIndex(card => card.id == activeId)
@@ -209,8 +177,6 @@ export default function Board() {
                 handleCardReorder(newCards, sourceList)
             }
         }
-
-        setActive(null)
     }
 
     async function fetchBoard() {
@@ -221,7 +187,6 @@ export default function Board() {
 
             if (!res.ok) {
                 handleToast({ success: false, message: "Erreur client/serveur" })
-                console.error(res)
                 return
             }
 
@@ -229,12 +194,30 @@ export default function Board() {
             setLists(resData.data.lists)
         } catch (error) {
             handleToast({ success: false, message: "Problème de connexion!" })
-            console.error(error)
             setLoading(false)
         }
     }
 
-    useEffect(() => { fetchBoard() }, [bid, token])
+    async function fetchLabels() {
+        try {
+            const res = await getLabels(token)
+            const resData = await res.json()
+            if (!res.ok) {
+                handleToast({ success: false, message: "Erreur client/serveur" })
+                return
+            }
+            setLabels(resData.data)
+        } catch (error) {
+            handleToast({ success: false, message: "Problème de connexion" })
+        }
+    }
+
+    async function fetch() {
+        await fetchBoard()
+        await fetchLabels()
+    }
+
+    useEffect(() => { fetch() }, [bid, token])
 
 
     if (loading) return <CircularProgress />
@@ -245,7 +228,7 @@ export default function Board() {
                 <Toolbar sx={{ margin: "0.5rem" }} />
                 <Box className="d-flex justify-content-evenly m-2">
                     <Typography variant="h3">{board.title}</Typography>
-                    <BoardModal content={board} onCreated={fetchBoard} onResult={handleToast} />
+                    <BoardModal content={board} onCreated={fetch} onResult={handleToast} />
                 </Box>
                 <Typography>{board.description}</Typography>
             </Box>
@@ -254,15 +237,14 @@ export default function Board() {
                 <DndContext
                     sensors={sensors}
                     collisionDetection={closestCorners}
-                    onDragStart={handleDragStart}
                     onDragOver={handleDragOver}
                     onDragEnd={handleDragEnd}
                 >
                     <SortableContext items={lists.map(list => `list-${list.order}`)} strategy={horizontalListSortingStrategy}>
-                        {lists.map(list => <BoardList key={list.id} list={list} cards={list.cards} onRequest={fetchBoard} onResult={handleToast} />)}
+                        {lists.map(list => <BoardList key={list.id} list={list} cards={list.cards} labels={labels} onRequest={fetch} onResult={handleToast} />)}
                     </SortableContext>
                 </DndContext>
-                <CreateList order={lists.length} onCreated={fetchBoard} onResult={handleToast} />
+                <CreateList order={lists.length} onCreated={fetch} onResult={handleToast} />
             </Box>
             <NotificationToast show={toast.show} message={toast.message} success={toast.success} onCLose={handleClose} />
         </>

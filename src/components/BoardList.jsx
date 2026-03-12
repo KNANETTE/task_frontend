@@ -15,7 +15,7 @@ import CreateCard from "./CreateCard";
 import ListCard from "./ListCard";
 import ListCards from "./ListCards";
 
-export default function BoardList({ list, cards, onRequest, onResult }) {
+export default function BoardList({ list, cards, labels, onRequest, onResult }) {
     const token = localStorage.getItem("token")
     const [title, setTitle] = useState(list.title)
     const [open, setOpen] = useState(false)
@@ -94,7 +94,7 @@ export default function BoardList({ list, cards, onRequest, onResult }) {
             <ListCards listOrder={list.order} >
                 <CardContent>
                     <SortableContext items={cards.map(card => `${card.id}`)} strategy={verticalListSortingStrategy}>
-                        {cards.map(card => <ListCard card={card} onDeleted={onRequest} onResult={onResult} />)}
+                        {cards.map(card => <ListCard key={card.id} card={card} labels={labels} onDeleted={onRequest} onResult={onResult} />)}
                     </SortableContext>
                     <CreateCard id={list.documentId} order={cards.length} onResult={onResult} onCreated={onRequest} />
                 </CardContent>
