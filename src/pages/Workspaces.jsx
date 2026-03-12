@@ -34,14 +34,12 @@ export default function Workspaces() {
 
             if (!response.ok) {
                 handleToast({ success: false, message: "Une erreur client/server s'est produite, veuillez réessayer plus tard." })
-                console.error(response)
                 return
             }
             setContent(data.workspaces)
             setLoading(false)
         } catch (err) {
             handleToast({ success: false, message: "Une erreur server s'est produite, veuillez réessayer plus tard." })
-            console.error(err)
         }
     }
 

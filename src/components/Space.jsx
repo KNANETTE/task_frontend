@@ -21,8 +21,6 @@ export default function Space({ content, url, onDelete, onResult, workspace = tr
             const data = await resp.json()
             if (!resp.ok) {
                 onResult({ success: false, message: "Erreur client/server" })
-                console.error(resp)
-                console.error(data)
                 return
             }
         } catch (error) {

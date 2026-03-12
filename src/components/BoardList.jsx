@@ -34,14 +34,12 @@ export default function BoardList({ list, cards, labels, onRequest, onResult }) 
             const resp = await deleteList(token, list.documentId)
             if (!resp.ok) {
                 onResult({ success: false, message: "Erreur client/server" })
-                console.error(resp)
                 return
             }
             onRequest()
             onResult({ success: true, message: "Liste supprimée!" })
         } catch (error) {
             onResult({ success: false, message: "Problème de connexion" })
-            console.error(e)
         }
     }
     const handleUpdate = async (e) => {
@@ -51,7 +49,6 @@ export default function BoardList({ list, cards, labels, onRequest, onResult }) 
         try {
             const resp = await updateList(token, list.documentId, data)
             if (!resp.ok) {
-                console.error(resp)
                 onResult({ success: false, message: "Erreur" })
                 return
             }
@@ -60,7 +57,6 @@ export default function BoardList({ list, cards, labels, onRequest, onResult }) 
             setOpen(!open)
         } catch (error) {
             onResult({ success: false, message: "Problème de connexion" })
-            console.error(error)
         }
         setLoading(false)
     }
@@ -77,13 +73,13 @@ export default function BoardList({ list, cards, labels, onRequest, onResult }) 
     return (
         <Card ref={setNodeRef} style={style} {...attributes}>
             {!open ? (
-                <CardContent sx={{ background: list.background, fontSize: "large" }} className="d-flex justify-content-between">
+                <CardContent sx={{ fontSize: "large" }} className="d-flex justify-content-between">
                     <Box {...listeners} sx={{ width: "75%", display: "flex", alignItems: "center" }}>
                         <Typography variant="h6">{list.title}</Typography>
                     </Box>
                     <Box className="d-flex justify-content-evenly align-items-start">
-                        <Button className="text-secondary" onClick={() => setOpen(!open)} style={{ background: "#0000", border: 0 }}><Edit /></Button>
-                        <Button className="text-danger" onClick={handleDelete} style={{ background: "#0000", border: 0 }}><Delete /></Button>
+                        <Button variant="outline-none text-secondary" onClick={() => setOpen(!open)}><Edit /></Button>
+                        <Button variant="outline-none text-danger" onClick={handleDelete}><Delete /></Button>
                     </Box>
                 </CardContent>
             ) : (

@@ -25,7 +25,6 @@ export default function ListCard({ card, labels, onDeleted, onResult }) {
             const resp = await deleteCard(token, content.documentId)
             if (!resp.ok) {
                 onResult({ success: false, message: "Erreur client/serveur" })
-                console.error(resp)
                 return
             }
 
@@ -33,7 +32,6 @@ export default function ListCard({ card, labels, onDeleted, onResult }) {
             onResult({ success: true, message: "Suppression de la tâche" })
         } catch (error) {
             onResult({ success: false, message: "Problème de connexion!" })
-            console.error(error)
         }
     }
     const handleShow = () => setShow(!show)

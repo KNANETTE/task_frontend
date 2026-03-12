@@ -17,7 +17,6 @@ export default function CreateCard({ id, order, onResult, onCreated }) {
             data: {
                 order,
                 content,
-                background: "#999",
                 list: id
             }
         })
@@ -25,7 +24,6 @@ export default function CreateCard({ id, order, onResult, onCreated }) {
             const resp = await createCard(token, newCard)
             if (!resp.ok) {
                 onResult({ success: false, message: "Erreur client / server" })
-                console.error(resp)
                 return
             }
             onCreated()
@@ -34,11 +32,10 @@ export default function CreateCard({ id, order, onResult, onCreated }) {
             setContent("")
         } catch (error) {
             onResult({ success: false, message: "Problème de connexion!" })
-            console.error(error)
         }
     }
 
-    const addButton = (<Button onClick={handleClicked} className="text-primary" style={{ background: "#0000", border: 0 }}><Add /></Button>)
+    const addButton = (<Button onClick={handleClicked} variant="outline-none text-primary"><Add /></Button>)
     const addForm = (
         <Box className="pt-3">
             <Form onSubmit={handleSubmit}>

@@ -54,13 +54,11 @@ export default function Profile() {
             const resp = await isLogged(token)
             const data = await resp.json()
             if (!resp.ok) {
-                console.error(resp)
                 handleToast({ success: false, message: "Erreur client/serveur" })
                 return
             }
             setUser(data)
         } catch (error) {
-            console.error(error)
             handleToast({ success: false, message: "Problème de connexion" })
         }
         setLoading(false)
@@ -74,13 +72,11 @@ export default function Profile() {
             const resp = await updateUSer(token, user.id, data)
             setMainButVal("ENREGISTRER")
             if (!resp.ok) {
-                console.error(resp)
                 handleToast({ success: false, message: "Erreur client/serveur" })
                 return
             }
             handleToast({ success: true, message: "Profile mise à jour avec succès!" })
         } catch (error) {
-            console.error(error)
             handleToast({ success: false, message: "Problème de connexion" })
         }
     }

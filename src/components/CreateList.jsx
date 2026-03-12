@@ -26,18 +26,15 @@ export default function CreateList({ order, onResult, onCreated }) {
                 board: bid,
             }
         })
-        console.log(order)
         try {
             const resp = await createList(token, data)
             if (!resp.ok) {
                 onResult({ success: false, message: "Erreur client/server" })
-                console.error(resp)
             }
             onCreated(bid)
             onResult({ success: true, message: "Une nouvelle liste s'est ajoutée à votre projet!" })
         } catch (error) {
             onResult({ success: false, message: "Problème de réseau" })
-            console.error(error)
         }
         handleClick()
         setTitle("")
@@ -47,7 +44,7 @@ export default function CreateList({ order, onResult, onCreated }) {
     const addListForm = (
         <Card sx={{ minWidth: "20rem", height: "fit-content" }}>
             <CardActions className="d-flex flex-row-reverse">
-                <Button onClick={handleClick} style={{ background: "#0000", color: "#911", border: 0 }}><CloseIcon /></Button>
+                <Button onClick={handleClick} variant='outline-none text-danger'><CloseIcon /></Button>
             </CardActions>
             <Form className="pb-1" onSubmit={handleSubmit}>
                 <CardContent>

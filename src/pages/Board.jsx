@@ -62,7 +62,6 @@ export default function Board() {
                 ))
             )
         } catch (error) {
-            console.error(error)
             setLists(previous)
             handleToast({ success: false, message: "Erreur" })
         }
@@ -79,7 +78,6 @@ export default function Board() {
                     JSON.stringify({ data: { order: card.order } })))
             )
         } catch (error) {
-            console.error(error)
             onResult({ success: false, message: "Erreur" })
         }
     }
@@ -107,11 +105,9 @@ export default function Board() {
         try {
             const resp = await updateCard(token, card.documentId, data)
             if (!resp.ok) {
-                console.error(error)
                 handleToast({ success: false, message: "Erreur" })
             }
         } catch (error) {
-            console.error(error)
             handleToast({ success: false, message: 'Erreur' })
         }
     }

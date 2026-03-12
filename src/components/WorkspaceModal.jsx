@@ -46,14 +46,12 @@ export default function WorkspaceModal({ onResult, onCreated, content = "" }) {
                 await updateWorkspace(token, content.documentId, data)
             if (!res.ok) {
                 onResult({ success: false, message: "Une erreur server s'est produite, veuillez réessayer plus tard." })
-                console.error(res)
                 return
             }
             onCreated()
             onResult({ success: true, message: "👍🏽" })
         } catch (error) {
             onResult({ success: false, message: "Une erreur réseau s'est produite, veuillez réessayer plus tard." })
-            console.error(error)
         }
         handleOpen()
         setTitle(content ? workspaceData.title : "")

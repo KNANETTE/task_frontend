@@ -20,13 +20,8 @@ export default function CardModal({ show, handleShow, content, labels, onRequest
         const data = JSON.stringify({ data: { content: card.content } })
         try {
             const resp = await updateCard(token, card.documentId, data)
-            if (!resp.ok) {
-                console.error(resp)
-                onResult({ success: false, message: "Erreur client/serveur" })
-                return
-            }
+            if (!resp.ok) onResult({ success: false, message: "Erreur client/serveur" })
         } catch (error) {
-            console.error(error)
             onResult({ success: false, message: "Problème de connexion" })
         }
         onRequest()
@@ -38,12 +33,10 @@ export default function CardModal({ show, handleShow, content, labels, onRequest
         try {
             const resp = await updateCard(token, card.documentId, data)
             if (!resp.ok) {
-                console.error(resp)
                 onResult({ success: false, message: "Erreur client/serveur" })
                 return
             }
         } catch (error) {
-            console.error(error)
             onResult({ success: false, message: "PRoblème de connexion" })
         }
         onRequest()

@@ -43,14 +43,12 @@ export default function BoardModal({ onResult, onCreated, content = null }) {
                 await updateBoard(token, content.documentId, data)
             if (!res.ok) {
                 onResult({ success: false, message: "Une erreur server s'est produite, veuillez réessayer plus tard." })
-                console.error(res)
                 return
             }
             onCreated(content ? content.documentId : id)
             onResult({ success: true, message: "👍🏽" })
         } catch (error) {
             onResult({ success: false, message: "Une erreur réseau s'est produite, veuillez réessayer plus tard." })
-            console.error(error)
         }
         handleOpen()
         setTitle(content ? boardData.title : "")

@@ -37,14 +37,12 @@ export default function Workspace() {
         try {
             if (!response.ok) {
                 handleToast({ success: false, message: "Erreur client/server" })
-                console.error(response)
                 return
             }
             setLoading(false)
             setWorkspace(data.data)
         } catch (error) {
             handleToast({ success: false, message: "Problème de connexion" })
-            console.error(error)
         }
     }
 
